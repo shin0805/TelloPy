@@ -21,7 +21,7 @@ log = logger.Logger('Tello')
 
 class Tello(object):
 
-    def __init__(self, port=9000, video_port=6038, tello_ip='192.168.10.1', interface=None):
+    def __init__(self, port=9000, video_port=6038, tello_ip='192.168.10.1', interface=None, video_off=False):
         self.EVENT_CONNECTED = event.Event('connected')
         self.EVENT_WIFI = event.Event('wifi')
         self.EVENT_LIGHT = event.Event('light')
@@ -108,7 +108,8 @@ class Tello(object):
 
         dispatcher.connect(self.__state_machine, dispatcher.signal.All)
         threading.Thread(target=self.__recv_thread).start()
-        threading.Thread(target=self.__video_thread).start()
+        if not video_off:
+            threading.Thread(target=self.__video_thread).start()
 
     def set_loglevel(self, level):
         """
